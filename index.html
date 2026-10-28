@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAC D Mada IA 2.0 Pro - Terminale D Madagascar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- KaTeX for Math & Science formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            dark: '#0f172a',
+                            navy: '#1e293b',
+                            amber: '#f59e0b',
+                            red: '#ef4444'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .katex-display { margin: 0.5em 0; overflow-x: auto; overflow-y: hidden; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="bg-brand-dark text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-amber flex items-center justify-center font-bold text-xl shadow-lg">
+                        🇲🇬
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight flex items-center gap-2">
+                            BAC D Mada IA <span class="bg-brand-600 text-xs px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">2.0 Live</span>
+                        </h1>
+                        <p class="text-xs text-slate-400">Terminale D Madagascar</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex space-x-1">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition hover:bg-slate-800 flex items-center gap-1.5 bg-slate-800 text-white">
+                        <i class="fa-solid fa-house"></i> Dashboard
+                    </button>
+                    <button onclick="switchTab('subjects')" id="nav-subjects" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition hover:bg-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-book-open"></i> Fiches & Cours
+                    </button>
+                    <button onclick="switchTab('quiz')" id="nav-quiz" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition hover:bg-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-to-square"></i> QCM & Quiz
+                    </button>
+                    <button onclick="switchTab('ai-tutor')" id="nav-ai-tutor" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition hover:bg-slate-800 flex items-center gap-1.5 text-brand-amber">
+                        <i class="fa-solid fa-robot"></i> Prof Groq IA
+                    </button>
+                    <button onclick="switchTab('calculator')" id="nav-calculator" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition hover:bg-slate-800 flex items-center gap-1.5 text-emerald-400">
+                        <i class="fa-solid fa-calculator"></i> Calcul Moyenne
+                    </button>
+                    <button onclick="switchTab('tools')" id="nav-tools" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition hover:bg-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-toolbox"></i> Tools & Pomodoro
+                    </button>
+                    <button onclick="switchTab('sujets')" id="nav-sujets" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition hover:bg-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-pdf"></i> Sujets Bac
+                    </button>
+                </nav>
+
+                <!-- Gamification Points & Settings -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-slate-800 border border-slate-700 px-3 py-1 rounded-xl flex items-center gap-2 text-xs font-bold text-amber-400" title="Ireo teboka sy Badge azonao">
+                        <i class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
+                        <span id="user-points-display">150 XP</span>
+                    </div>
+
+                    <button onclick="openSettingsModal()" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition relative cursor-pointer" title="Configuration Groq API Key">
+                        <i class="fa-solid fa-gear text-base"></i>
+                        <span id="api-status-dot" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Bottom Bar -->
+        <div class="lg:hidden border-t border-slate-800 bg-slate-900/95 backdrop-blur fixed bottom-0 left-0 right-0 z-50">
+            <div class="grid grid-cols-6 text-center py-2 text-[10px]">
+                <button onclick="switchTab('dashboard')" class="mobile-nav-btn text-slate-400 hover:text-brand-500 flex flex-col items-center">
+                    <i class="fa-solid fa-house text-base mb-0.5"></i> Home
+                </button>
+                <button onclick="switchTab('subjects')" class="mobile-nav-btn text-slate-400 hover:text-brand-500 flex flex-col items-center">
+                    <i class="fa-solid fa-book-open text-base mb-0.5"></i> Cours
+                </button>
+                <button onclick="switchTab('quiz')" class="mobile-nav-btn text-slate-400 hover:text-brand-500 flex flex-col items-center">
+                    <i class="fa-solid fa-pen-to-square text-base mb-0.5"></i> Quiz
+                </button>
+                <button onclick="switchTab('ai-tutor')" class="mobile-nav-btn text-brand-amber flex flex-col items-center font-bold">
+                    <i class="fa-solid fa-robot text-base mb-0.5"></i> AI Prof
+                </button>
+                <button onclick="switchTab('calculator')" class="mobile-nav-btn text-emerald-400 flex flex-col items-center">
+                    <i class="fa-solid fa-calculator text-base mb-0.5"></i> Moyenne
+                </button>
+                <button onclick="switchTab('tools')" class="mobile-nav-btn text-slate-400 hover:text-brand-500 flex flex-col items-center">
+                    <i class="fa-solid fa-toolbox text-base mb-0.5"></i> Tools
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20 lg:pb-8">
+
+        <!-- Banner with Countdown & Streak -->
+        <div id="welcome-banner" class="mb-6 bg-gradient-to-r from-brand-dark via-slate-800 to-brand-700 text-white p-4 sm:p-6 rounded-2xl shadow-lg relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="z-10 max-w-xl">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-brand-amber/20 text-brand-amber border border-brand-amber/30 text-[10px] px-2.5 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+                        BAC D Madagascar 2026
+                    </span>
+                    <span id="streak-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
+                        🔥 Live Online Learning
+                    </span>
+                </div>
+                <h2 class="text-lg sm:text-2xl font-extrabold tracking-tight">Miomana amin'ny BACC D amim-pahatsorana!</h2>
+                <p class="text-slate-300 text-xs sm:text-sm mt-1">
+                    SVT, Matematika, Physique-Chimie, Filôzôfia miaraka amin'ny AI Prof Groq sy Calculateur de Moyenne BACC D.
+                </p>
+            </div>
+
+            <!-- BACC Countdown Widget -->
+            <div class="z-10 bg-slate-900/80 backdrop-blur border border-slate-700 p-3 sm:p-4 rounded-xl flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="text-center px-2">
+                    <span id="countdown-days" class="block text-xl sm:text-2xl font-extrabold text-amber-400">145</span>
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold">Andro sisa</span>
+                </div>
+                <div class="h-8 w-px bg-slate-700"></div>
+                <div class="text-xs text-slate-300 space-y-0.5">
+                    <div class="font-bold flex items-center gap-1"><i class="fa-regular fa-calendar-check text-brand-500"></i> BACC 2026</div>
+                    <div class="text-[11px] text-slate-400">Jolay 2026 (Madagascar)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 1: DASHBOARD ================= -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <!-- Progress Overview Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-dna"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase">SVT (Coef 5)</p>
+                        <h3 class="text-lg font-bold text-slate-800" id="stat-svt-score">10 / 10 XP</h3>
+                        <p class="text-xs text-emerald-600 font-medium">Génétique & Écologie</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase">Maths (Coef 5)</p>
+                        <h3 class="text-lg font-bold text-slate-800" id="stat-math-score">10 / 10 XP</h3>
+                        <p class="text-xs text-blue-600 font-medium">Analyse & Proba</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-atom"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase">PC (Coef 5)</p>
+                        <h3 class="text-lg font-bold text-slate-800" id="stat-pc-score">0 / 10 XP</h3>
+                        <p class="text-xs text-purple-600 font-medium">Mécanique & Chimie</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase">Philo (Coef 2)</p>
+                        <h3 class="text-lg font-bold text-slate-800" id="stat-philo-score">0 / 10 XP</h3>
+                        <p class="text-xs text-amber-600 font-medium">Ny Olona & Siansa</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center space-x-3 cursor-pointer hover:bg-emerald-100/80 transition" onclick="switchTab('calculator')">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm">Calculateur de Moyenne</h4>
+                        <p class="text-xs text-slate-600">Simuler ny naoty sy Mention amin'ny Coef Bac D</p>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-amber-50 border border-amber-100 flex items-center space-x-3 cursor-pointer hover:bg-amber-100/80 transition" onclick="switchTab('tools')">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500 text-slate-900 flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm">Minuteur Pomodoro</h4>
+                        <p class="text-xs text-slate-600">25 min fianarana / 5 min pause ho an'ny fifantohana</p>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-blue-50 border border-blue-100 flex items-center space-x-3 cursor-pointer hover:bg-blue-100/80 transition" onclick="switchTab('ai-tutor')">
+                    <div class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm">Prof Virtoaly Groq (Live AI)</h4>
+                        <p class="text-xs text-slate-600">Valin-teny haingana amin'ny AI Groq</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject Cards Grid -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-brand-600"></i> Taranja amin'ny Série D (Madagascar)
+                    </h3>
+                    <span class="text-xs font-semibold text-slate-500">Programa Officiel 2026</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <!-- SVT Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">Coef : 5</span>
+                                <i class="fa-solid fa-microscope text-2xl text-emerald-600"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-lg mb-1">SVT</h4>
+                            <p class="text-xs text-slate-600 mb-4">Sciences de la Vie et de la Terre : Génétique, Immunologie, Écologie sy Geolojia Madagascar.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="filterSubjectAndSwitch('svt')" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-book"></i> Hijery Fiches
+                            </button>
+                            <button onclick="startQuizForSubject('svt')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-play"></i> Hanafy Quiz SVT
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Math Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Coef : 5</span>
+                                <i class="fa-solid fa-calculator text-2xl text-blue-600"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-lg mb-1">Matematika</h4>
+                            <p class="text-xs text-slate-600 mb-4">Analyse (Ln, Exp), Nombres Complexes, Probabilités, Suites Numériques sy Géométrie.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="filterSubjectAndSwitch('math')" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-square-root-variable"></i> Formules & Fiches
+                            </button>
+                            <button onclick="startQuizForSubject('math')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-play"></i> Hanafy Quiz Math
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PC Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">Coef : 5</span>
+                                <i class="fa-solid fa-flask text-2xl text-purple-600"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-lg mb-1">Physique - Chimie</h4>
+                            <p class="text-xs text-slate-600 mb-4">Mécanique de Newton, Optique, Circuits RLC, Chimie Organique, Acides sy Bases.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="filterSubjectAndSwitch('pc')" class="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-atom"></i> Formules & Fiches
+                            </button>
+                            <button onclick="startQuizForSubject('pc')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-play"></i> Hanafy Quiz PC
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Philo Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">Coef : 2</span>
+                                <i class="fa-solid fa-lightbulb text-2xl text-amber-600"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-lg mb-1">Filôzôfia</h4>
+                            <p class="text-xs text-slate-600 mb-4">Ny Olombelona, Ny Fiarahamonina, Ny Siansa sy ny Fahalalana, Ny Zavakanto.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="filterSubjectAndSwitch('philo')" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-feather"></i> Tsara ho Fantatra
+                            </button>
+                            <button onclick="startQuizForSubject('philo')" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-play"></i> Hanafy Quiz Philo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: SUBJECTS & FICHES ================= -->
+        <section id="tab-subjects" class="tab-content hidden space-y-6">
+            <!-- Filter Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">
+                    <button onclick="filterFiches('all')" id="btn-fiche-all" class="fiche-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-dark text-white shadow">
+                        Izy Rehetra
+                    </button>
+                    <button onclick="filterFiches('svt')" id="btn-fiche-svt" class="fiche-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        SVT
+                    </button>
+                    <button onclick="filterFiches('math')" id="btn-fiche-math" class="fiche-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        Matematika
+                    </button>
+                    <button onclick="filterFiches('pc')" id="btn-fiche-pc" class="fiche-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        Physique-Chimie
+                    </button>
+                    <button onclick="filterFiches('philo')" id="btn-fiche-philo" class="fiche-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        Filôzôfia
+                    </button>
+                </div>
+
+                <div class="relative w-full sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-fiches" oninput="searchFiches()" placeholder="Tadiavo toko na formule..." class="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-brand-500">
+                </div>
+            </div>
+
+            <!-- Fiches Grid Container -->
+            <div id="fiches-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Fiches injected via JS -->
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: QUIZ & EXERCISES ================= -->
+        <section id="tab-quiz" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-brand-600"></i> QCM & Fanazaran-tena BACC D
+                    </h3>
+                    <p class="text-xs text-slate-500">Misy valiny amin'ny antsipiriany (Corrigé détaillé) miaraka amin'ny fanazavana.</p>
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <select id="quiz-subject-select" onchange="loadQuizSubject()" class="w-full sm:w-auto bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-brand-500">
+                        <option value="all">Sokajy Rehetra (Tout)</option>
+                        <option value="svt">SVT (Génétique, Écologie)</option>
+                        <option value="math">Matematika (LN/EXP, Probabilités)</option>
+                        <option value="pc">Physique - Chimie (Mécanique, Chimie)</option>
+                        <option value="philo">Filôzôfia (Olona, Siansa)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quiz Card Display -->
+            <div id="quiz-box" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6 relative">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-2">
+                        <span id="quiz-subject-tag" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">SVT</span>
+                        <span id="quiz-counter" class="text-xs font-semibold text-slate-500">Fanontaniana 1 / 4</span>
+                    </div>
+                    <div class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full flex items-center gap-1.5">
+                        <i class="fa-solid fa-trophy text-brand-amber"></i> Isa Azo: <span id="quiz-current-score" class="text-brand-600 font-extrabold text-sm">0</span>
+                    </div>
+                </div>
+
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-brand-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 id="quiz-question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                        Loading Question...
+                    </h4>
+                </div>
+
+                <div id="quiz-options-container" class="grid grid-cols-1 gap-3">
+                    <!-- Dynamic choices -->
+                </div>
+
+                <div id="quiz-explanation-box" class="hidden p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2 text-xs sm:text-sm">
+                    <div class="flex items-center justify-between font-bold" id="quiz-feedback-title">
+                        <!-- Correct/Incorrect badge -->
+                    </div>
+                    <p id="quiz-explanation-text" class="text-slate-700 leading-relaxed">
+                        <!-- Explanation details -->
+                    </p>
+                    <div class="pt-2 border-t border-slate-200/60 flex justify-between items-center">
+                        <button onclick="speakText(document.getElementById('quiz-explanation-text').innerText)" class="text-xs text-blue-600 hover:text-blue-700 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-volume-high"></i> Henoy am-peo (Audio)
+                        </button>
+                        <button onclick="askAIPromptFromQuiz()" class="text-xs text-brand-600 font-bold hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-robot"></i> AI Prof Fanazavana
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button id="quiz-next-btn" onclick="nextQuestion()" disabled class="bg-slate-300 text-slate-500 font-bold px-6 py-2.5 rounded-xl text-sm transition flex items-center gap-2 cursor-not-allowed">
+                        Aman-tsoratra Manaraka <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 4: AI TUTOR (GROQ INTEGRATION & VOICE) ================= -->
+        <section id="tab-ai-tutor" class="tab-content hidden space-y-4">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[650px]">
+                <!-- Chat Header -->
+                <div class="bg-brand-dark text-white p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-amber to-brand-600 flex items-center justify-center font-bold text-white text-lg shadow">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm flex items-center gap-2">
+                                AI Prof Bac D Madagascar
+                                <span class="bg-brand-amber/20 text-brand-amber border border-brand-amber/40 text-[10px] px-2 py-0.5 rounded-full font-semibold">Groq Live API</span>
+                            </h3>
+                            <p class="text-[11px] text-slate-300">Mpampianatra virtoaly Malagasy / Frantsay (Terminal D)</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                            <i class="fa-solid fa-trash-can"></i> Fafana
+                        </button>
+                        <button onclick="openSettingsModal()" class="text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                            <i class="fa-solid fa-key"></i> API Key
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Body Messages -->
+                <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 custom-scrollbar bg-slate-50/50">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-dark text-amber-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 max-w-[85%] shadow-sm text-xs sm:text-sm space-y-2 text-slate-800">
+                            <p class="font-bold text-brand-700">Salama! Izaho no AI Prof Bac D Madagascar 🇲🇬</p>
+                            <p>Manana fanontaniana amin'ny <strong>SVT, Maths, Physique-Chimie, na Filôzôfia</strong> ve ianao? Mampiasà ny API Key mba hamaliana mivantana amim-pahamendrehana!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="p-2 border-t border-slate-200 bg-white overflow-x-auto flex gap-2 text-xs custom-scrollbar">
+                    <button onclick="sendQuickMessage('Hazavao amiko amin\'ny fomba mazava ny Loi de Hardy-Weinberg amin\'ny SVT?')" class="whitespace-nowrap px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full font-medium hover:bg-emerald-100 transition">
+                        🧬 SVT: Hardy-Weinberg
+                    </button>
+                    <button onclick="sendQuickMessage('Ahoana no fomba fikajiana ny Probabilité conditionnelle P_A(B) amin\'ny Maths?')" class="whitespace-nowrap px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full font-medium hover:bg-blue-100 transition">
+                        📐 Math: Probabilité
+                    </button>
+                    <button onclick="sendQuickMessage('Inona no mahasamihafa ny Acide Fort sy Acide Faible amin\'ny Chimie?')" class="whitespace-nowrap px-3 py-1.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-full font-medium hover:bg-purple-100 transition">
+                        🧪 Chimie: Acides & Bases
+                    </button>
+                    <button onclick="sendQuickMessage('Omeo plan d\'attaque tsara ho an\'ny Dissertation Filôzôfia Bac D.')" class="whitespace-nowrap px-3 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-full font-medium hover:bg-amber-100 transition">
+                        💡 Philo: Plan Dissertation
+                    </button>
+                </div>
+
+                <!-- Input Box -->
+                <div class="p-3 border-t border-slate-200 bg-white flex items-center gap-2">
+                    <input type="text" id="chat-input" onkeydown="if(event.key === 'Enter') sendMessage()" placeholder="Mametraha fanontaniana eto..." class="flex-grow bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-brand-500">
+                    <button onclick="sendMessage()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-2.5 rounded-xl transition text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow">
+                        <span>Lefao</span> <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 5: CALCULATEUR DE MOYENNE BAC D ================= -->
+        <section id="tab-calculator" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-emerald-600"></i> Calculateur de Moyenne BACC Série D (Madagascar)
+                        </h3>
+                        <p class="text-xs text-slate-500">Ampidiro ny naoty heverinao fa azonao amin'ny fanadinana mba hisimuler-na ny Moyenne sy Mention.</p>
+                    </div>
+                    <button onclick="resetGradeCalculator()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-lg transition self-start sm:self-auto">
+                        <i class="fa-solid fa-rotate-left"></i> Reinitialiser
+                    </button>
+                </div>
+
+                <!-- Inputs Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- SVT -->
+                    <div class="p-3.5 bg-emerald-50/60 border border-emerald-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">SVT</label>
+                            <span class="text-[10px] text-emerald-700 font-semibold">Coefficient : 5</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="12" id="grade-svt" oninput="calculateBacAverage()" class="w-20 bg-white border border-emerald-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <!-- Maths -->
+                    <div class="p-3.5 bg-blue-50/60 border border-blue-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">Matematika</label>
+                            <span class="text-[10px] text-blue-700 font-semibold">Coefficient : 5</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="11" id="grade-math" oninput="calculateBacAverage()" class="w-20 bg-white border border-blue-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <!-- PC -->
+                    <div class="p-3.5 bg-purple-50/60 border border-purple-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">Physique-Chimie</label>
+                            <span class="text-[10px] text-purple-700 font-semibold">Coefficient : 5</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="10" id="grade-pc" oninput="calculateBacAverage()" class="w-20 bg-white border border-purple-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <!-- Philo -->
+                    <div class="p-3.5 bg-amber-50/60 border border-amber-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">Filôzôfia</label>
+                            <span class="text-[10px] text-amber-700 font-semibold">Coefficient : 2</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="10" id="grade-philo" oninput="calculateBacAverage()" class="w-20 bg-white border border-amber-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <!-- Français -->
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">Français</label>
+                            <span class="text-[10px] text-slate-500 font-semibold">Coefficient : 2</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="11" id="grade-fr" oninput="calculateBacAverage()" class="w-20 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <!-- Malagasy -->
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">Malagasy</label>
+                            <span class="text-[10px] text-slate-500 font-semibold">Coefficient : 2</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="12" id="grade-mlg" oninput="calculateBacAverage()" class="w-20 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <!-- Anglais -->
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">Anglais</label>
+                            <span class="text-[10px] text-slate-500 font-semibold">Coefficient : 2</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="12" id="grade-ang" oninput="calculateBacAverage()" class="w-20 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <!-- EPS -->
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800">EPS (Kolo tsaina sy vatana)</label>
+                            <span class="text-[10px] text-slate-500 font-semibold">Coefficient : 1</span>
+                        </div>
+                        <input type="number" min="0" max="20" value="14" id="grade-eps" oninput="calculateBacAverage()" class="w-20 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <!-- Calculation Result Banner -->
+                <div class="bg-gradient-to-r from-slate-900 via-brand-dark to-slate-800 text-white p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">Vokany vinavina (Résultat estimé)</span>
+                        <div class="flex items-baseline gap-3 mt-1">
+                            <span id="bac-moyenne-display" class="text-3xl sm:text-4xl font-extrabold text-amber-400">11.33 / 20</span>
+                            <span id="bac-mention-display" class="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs px-3 py-1 rounded-full font-bold">
+                                ADMIS - Mention Passable
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-300 mt-2">Total Points: <span id="bac-total-points" class="font-bold text-white">272</span> / 480 | Total Coef: 24</p>
+                    </div>
+
+                    <div class="text-xs text-slate-300 space-y-1 bg-slate-800/80 p-4 rounded-xl border border-slate-700 w-full md:w-auto">
+                        <div class="font-bold text-white mb-1"><i class="fa-solid fa-award text-amber-400"></i> Seuil des Mentions BACC :</div>
+                        <div>• Passable : 10.00 / 20</div>
+                        <div>• Assez Bien : 12.00 / 20</div>
+                        <div>• Bien : 14.00 / 20</div>
+                        <div>• Très Bien : 16.00 / 20</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 6: TOOLS & POMODORO ================= -->
+        <section id="tab-tools" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Pomodoro Timer Box -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 text-center">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-stopwatch text-amber-500"></i> Minuteur Pomodoro (Fianarana)
+                        </h3>
+                        <span id="pomodoro-mode-label" class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">Session Travail (25m)</span>
+                    </div>
+
+                    <div class="py-4">
+                        <div class="text-5xl sm:text-6xl font-extrabold font-mono text-slate-900 tracking-tight" id="pomodoro-timer-display">
+                            25:00
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">Teknika Pomodoro: Mifantoha tsara mandritra ny 25 minitra, avy eo mampanaftra saina 5 minitra.</p>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-3">
+                        <button onclick="togglePomodoro()" id="pomodoro-start-btn" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-2 shadow">
+                            <i class="fa-solid fa-play"></i> Hanomboka
+                        </button>
+                        <button onclick="resetPomodoro()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm transition">
+                            <i class="fa-solid fa-rotate-left"></i> Averina
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scientific Calculator Solver Box -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-square-root-variable text-blue-600"></i> Calculateur Second Degré (Maths)
+                        </h3>
+                        <p class="text-xs text-slate-500">Kajio ny équation $ax^2 + bx + c = 0$ sy ny Discriminant $\Delta$</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-600">Valeur a</label>
+                            <input type="number" id="eq-a" value="1" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-bold text-center">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-600">Valeur b</label>
+                            <input type="number" id="eq-b" value="-5" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-bold text-center">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-600">Valeur c</label>
+                            <input type="number" id="eq-c" value="6" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-bold text-center">
+                        </div>
+                    </div>
+
+                    <button onclick="solveQuadraticEquation()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">
+                        Kajio ny Discriminant $\Delta$ sy ny Valiny
+                    </button>
+
+                    <div id="equation-result-box" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs font-mono hidden">
+                        <!-- Result -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 7: SUJETS BAC ARCHIVE ================= -->
+        <section id="tab-sujets" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open text-brand-600"></i> Tahirim-panadinana Sujets BACC D Madagascar
+                        </h3>
+                        <p class="text-xs text-slate-500">Fanadinana BACC D nifanesy sy laza adina efa nivoaka teto Madagasikara</p>
+                    </div>
+
+                    <!-- Automatic Update Status Indicator -->
+                    <div id="sujets-sync-status" class="flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border bg-slate-50 border-slate-200 font-semibold text-slate-600">
+                        <span class="w-2 h-2 rounded-full bg-slate-400 animate-pulse"></span>
+                        <span id="sujets-status-text">Manao vérification...</span>
+                    </div>
+                </div>
+
+                <div id="sujets-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic sujets loaded via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Paramètres (API Key Settings) -->
+    <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-brand-dark text-white p-4 flex items-center justify-between">
+                <h3 class="font-bold text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-gear text-amber-400"></i> Configuration Groq API Key
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white p-1 rounded-lg transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="p-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Groq API Key (gsk_...)</label>
+                    <input type="password" id="modal-api-key-input" placeholder="gsk_..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-brand-500 font-mono">
+                    <p class="text-[11px] text-slate-500 mt-1.5">
+                        Afaka mahazo API Key maimaimpoana ao amin'ny <a href="https://console.groq.com" target="_blank" class="text-brand-600 underline font-semibold">console.groq.com</a>.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Modèle IA</label>
+                    <select id="modal-model-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-brand-500">
+                        <option value="llama-3.3-70b-versatile">Llama 3.3 70B (Recommandé - Haingana sy Matanjaka)</option>
+                        <option value="llama3-8b-8192">Llama 3 8B (Tena haingana kely)</option>
+                        <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                    </select>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-800 text-[11px] space-y-1">
+                    <div class="font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-shield-halved"></i> Fitahirizana ao anaty App
+                    </div>
+                    <div>Tohizana amin'ny fomba azo antoka ao amin'ny navigateur-nao ihany io cle API io (LocalStorage).</div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 border-t border-slate-100 flex items-center justify-end gap-2">
+                <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition">
+                    Ajanona
+                </button>
+                <button onclick="saveSettingsModal()" class="px-5 py-2 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white transition shadow flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk"></i> Tehirizina (Enregistrer)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        /* ================= APP STATE ================= */
+        const APP_STATE = {
+            currentTab: 'dashboard',
+            groqApiKey: localStorage.getItem('mpanampy_groq_key') || '',
+            groqModel: localStorage.getItem('mpanampy_groq_model') || 'llama-3.3-70b-versatile',
+            quizSubject: 'all',
+            currentQuizIndex: 0,
+            quizScore: 0,
+            points: parseInt(localStorage.getItem('mpanampy_xp')) || 150,
+            pomodoroTime: 25 * 60,
+            pomodoroInterval: null,
+            pomodoroRunning: false,
+            activeFicheFilter: 'all',
+            sujetsList: JSON.parse(localStorage.getItem('mpanampy_sujets_cache')) || [
+                {
+                    id: 'svt-2024',
+                    subject: 'SVT',
+                    year: '2024',
+                    title: 'BACC D - SVT Officiel',
+                    desc: 'Génétique, Écologie sy Biologie Humaine',
+                    badgeClass: 'bg-emerald-100 text-emerald-800'
+                },
+                {
+                    id: 'math-2024',
+                    subject: 'Maths',
+                    year: '2024',
+                    title: 'BACC D - Matematika Officiel',
+                    desc: 'Problème d\'Analyse (Ln), Complexes & Proba',
+                    badgeClass: 'bg-blue-100 text-blue-800'
+                },
+                {
+                    id: 'pc-2024',
+                    subject: 'PC',
+                    year: '2024',
+                    title: 'BACC D - Physique-Chimie',
+                    desc: 'Mouvement MPU, Circuit RLC, Esterification',
+                    badgeClass: 'bg-purple-100 text-purple-800'
+                },
+                {
+                    id: 'philo-2024',
+                    subject: 'Philo',
+                    year: '2024',
+                    title: 'BACC D - Filôzôfia Officiel',
+                    desc: 'La Conscience, L\'État, La Science et la Technique',
+                    badgeClass: 'bg-amber-100 text-amber-800'
+                }
+            ]
+        };
+
+        /* ================= DATA BANK ================= */
+        const FICHES_DATA = [
+            {
+                id: 1,
+                subject: 'svt',
+                title: 'Genétique : Lois de Mendel & Transmission des caractères',
+                badge: 'SVT',
+                badgeClass: 'bg-emerald-100 text-emerald-800',
+                content: `
+                    <p class="mb-2">Ny genétique dia mandศึกษา ny fampitana ny toetra mandova (hérédité). Ny <strong>Monohybridisme</strong> dia mandinika toetra iray ihany.</p>
+                    <ul class="list-disc pl-5 space-y-1 mb-2">
+                        <li><strong>1ère Loi de Mendel :</strong> Uniformité des hybrides de la première génération (F1).</li>
+                        <li><strong>2ème Loi de Mendel :</strong> Ségrégation indépendante des alleles à la F2 ($3/4 - 1/4$).</li>
+                        <li><strong>Hardy-Weinberg :</strong> Dans une population idéale : $p^2 + 2pq + q^2 = 1$.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 2,
+                subject: 'math',
+                title: 'Analyse : Fonctions Logarithme (Ln) & Exponentielle (Exp)',
+                badge: 'Maths',
+                badgeClass: 'bg-blue-100 text-blue-800',
+                content: `
+                    <p class="mb-2">Propriétés essentielles pour le Bac D :</p>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-xs space-y-1 mb-2">
+                        <div>$\ln(a \cdot b) = \ln(a) + \ln(b)$</div>
+                        <div>$\ln(e^x) = x \quad \text{et} \quad e^{\ln(x)} = x \quad (x > 0)$</div>
+                        <div>$\lim_{x \to +\infty} \frac{\ln(x)}{x} = 0 \quad \text{et} \quad \lim_{x \to +\infty} \frac{e^x}{x} = +\infty$</div>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                subject: 'pc',
+                title: 'Physique : Lois de Newton & Mouvement Paraboloïde',
+                badge: 'Physique',
+                badgeClass: 'bg-purple-100 text-purple-800',
+                content: `
+                    <p class="mb-2">Principe fondamental de la dynamique (2ème loi de Newton) :</p>
+                    <div class="p-2 bg-purple-50 rounded text-center font-bold mb-2">
+                        $$\sum \vec{F}_{ext} = m \cdot \vec{a}$$
+                    </div>
+                    <p>Dans un champ de pesanteur uniforme $g$, l'accélération sur l'axe vertical est $a_y = -g$.</p>
+                `
+            },
+            {
+                id: 4,
+                subject: 'philo',
+                title: 'Filôzôfia : Ny Olombelona sy ny Siansa',
+                badge: 'Philo',
+                badgeClass: 'bg-amber-100 text-amber-800',
+                content: `
+                    <p class="mb-2">Ny Siansa sy ny Teknolojia dia manampy ny olombelona hifehy ny tontolo iainana, saingy mila fahaizana mifehy ny etika mifanaraka amin'ny maha-olona.</p>
+                    <p class="italic text-slate-600 font-medium">"Science sans conscience n'est que ruine de l'âme." - François Rabelais</p>
+                `
+            }
+        ];
+
+        const QUIZ_DATA = [
+            {
+                subject: 'svt',
+                subjectName: 'SVT',
+                badgeClass: 'bg-emerald-100 text-emerald-800',
+                question: 'Inona no atao hoe Meïose amin\'ny fizarana sela (Division cellulaire)?',
+                options: [
+                    'Fizarana sela mampidina ny isan\'ny chromosomes ho $n$ (Haploïde)',
+                    'Fizarana sela mitazona ny isan\'ny chromosomes ho $2n$ (Diploïde)',
+                    'Fampifangaroana spermatozoïde sy ovule',
+                    'Fahasimban\'ny sela amin\'ny taova'
+                ],
+                correct: 0,
+                explanation: 'Ny Meïose dia fizarana sela mamorona gamètes (haploïdes, $n$) avy amin\'ny sela mère diploïde ($2n$).'
+            },
+            {
+                subject: 'math',
+                subjectName: 'Matematika',
+                badgeClass: 'bg-blue-100 text-blue-800',
+                question: 'Manao ahoana ny dérivée an\'ny fonction $f(x) = \ln(3x + 1)$?',
+                options: [
+                    '$f\'(x) = \\frac{1}{3x+1}$',
+                    '$f\'(x) = \\frac{3}{3x+1}$',
+                    '$f\'(x) = 3 \\ln(3x+1)$',
+                    '$f\'(x) = e^{3x+1}$'
+                ],
+                correct: 1,
+                explanation: 'Ny dérivée an\'ny $\\ln(u(x))$ dia $\\frac{u\'(x)}{u(x)}$. Eto $u(x) = 3x+1 \\implies u\'(x) = 3$. Valiny: $\\frac{3}{3x+1}$.'
+            },
+            {
+                subject: 'pc',
+                subjectName: 'Physique-Chimie',
+                badgeClass: 'bg-purple-100 text-purple-800',
+                question: 'Inona no formule fikajiana ny pH amin\'ny solution aqueuse?',
+                options: [
+                    '$\\text{pH} = \\ln([\\text{H}_3\\text{O}^+])$',
+                    '$\\text{pH} = -\\log([\\text{H}_3\\text{O}^+])$',
+                    '$\\text{pH} = 14 + [\\text{OH}^-]$',
+                    '$\\text{pH} = [\\text{H}_3\\text{O}^+] \\times [\\text{OH}^-]$'
+                ],
+                correct: 1,
+                explanation: 'Ny pH dia kajina amin\'ny formula $\\text{pH} = -\\log([\\text{H}_3\\text{O}^+])$.'
+            },
+            {
+                subject: 'philo',
+                subjectName: 'Filôzôfia',
+                badgeClass: 'bg-amber-100 text-amber-800',
+                question: 'Iza no mpanoratra ilay fehezanteny hoe "Je pense, donc je suis" (Cogito ergo sum)?',
+                options: [
+                    'Socrates',
+                    'René Descartes',
+                    'Jean-Paul Sartre',
+                    'Karl Marx'
+                ],
+                correct: 1,
+                explanation: 'René Descartes no namolavola ity fototra lehibe amin\'ny filôzôfia rationaliste ity.'
+            }
+        ];
+
+        /* ================= RENDER & INTERACTION FUNCTIONS ================= */
+        function switchTab(tabId) {
+            APP_STATE.currentTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+            });
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) activeNav.classList.add('bg-slate-800', 'text-white');
+
+            renderKaTeX();
+        }
+
+        function renderKaTeX() {
+            if (window.renderMathInElement) {
+                try {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) {
+                    console.warn("KaTeX rendering warning:", e);
+                }
+            }
+        }
+
+        function updateUserPointsDisplay() {
+            const display = document.getElementById('user-points-display');
+            if (display) display.innerText = `${APP_STATE.points} XP`;
+            localStorage.setItem('mpanampy_xp', APP_STATE.points);
+        }
+
+        function renderFiches() {
+            const container = document.getElementById('fiches-container');
+            if (!container) return;
+
+            const searchTerm = (document.getElementById('search-fiches')?.value || '').toLowerCase();
+            const filtered = FICHES_DATA.filter(fiche => {
+                const matchesSubject = APP_STATE.activeFicheFilter === 'all' || fiche.subject === APP_STATE.activeFicheFilter;
+                const matchesSearch = fiche.title.toLowerCase().includes(searchTerm) || fiche.content.toLowerCase().includes(searchTerm);
+                return matchesSubject && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 text-xs">Tsy nisy fiches hita tamin'ny fikarohana.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(fiche => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${fiche.badgeClass}">${fiche.badge}</span>
+                        <button onclick="speakText('${fiche.title.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-brand-600 text-xs">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">${fiche.title}</h4>
+                    <div class="text-xs sm:text-sm text-slate-700 leading-relaxed">${fiche.content}</div>
+                </div>
+            `).join('');
+
+            renderKaTeX();
+        }
+
+        function filterFiches(subject) {
+            APP_STATE.activeFicheFilter = subject;
+            document.querySelectorAll('.fiche-filter-btn').forEach(btn => {
+                btn.className = "fiche-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200";
+            });
+            const activeBtn = document.getElementById(`btn-fiche-${subject}`);
+            if (activeBtn) {
+                activeBtn.className = "fiche-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-dark text-white shadow";
+            }
+            renderFiches();
+        }
+
+        function filterSubjectAndSwitch(subject) {
+            switchTab('subjects');
+            filterFiches(subject);
+        }
+
+        function searchFiches() {
+            renderFiches();
+        }
+
+        /* ================= QUIZ ENGINE ================= */
+        function getFilteredQuizList() {
+            if (APP_STATE.quizSubject === 'all') return QUIZ_DATA;
+            return QUIZ_DATA.filter(q => q.subject === APP_STATE.quizSubject);
+        }
+
+        function loadQuizSubject() {
+            const select = document.getElementById('quiz-subject-select');
+            if (select) APP_STATE.quizSubject = select.value;
+            APP_STATE.currentQuizIndex = 0;
+            loadQuizQuestion();
+        }
+
+        function startQuizForSubject(subject) {
+            switchTab('quiz');
+            const select = document.getElementById('quiz-subject-select');
+            if (select) select.value = subject;
+            APP_STATE.quizSubject = subject;
+            APP_STATE.currentQuizIndex = 0;
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const quizList = getFilteredQuizList();
+            const explanationBox = document.getElementById('quiz-explanation-box');
+            const nextBtn = document.getElementById('quiz-next-btn');
+
+            if (explanationBox) explanationBox.classList.add('hidden');
+            if (nextBtn) {
+                nextBtn.disabled = true;
+                nextBtn.className = "bg-slate-300 text-slate-500 font-bold px-6 py-2.5 rounded-xl text-sm transition flex items-center gap-2 cursor-not-allowed";
+            }
+
+            if (!quizList || quizList.length === 0) {
+                document.getElementById('quiz-question-text').innerText = "Tsy misy quiz amin'ity sokajy ity amin'izao.";
+                document.getElementById('quiz-options-container').innerHTML = "";
+                return;
+            }
+
+            if (APP_STATE.currentQuizIndex >= quizList.length) {
+                APP_STATE.currentQuizIndex = 0;
+            }
+
+            const q = quizList[APP_STATE.currentQuizIndex];
+            document.getElementById('quiz-subject-tag').className = `px-3 py-1 rounded-full text-xs font-bold ${q.badgeClass}`;
+            document.getElementById('quiz-subject-tag').innerText = q.subjectName;
+            document.getElementById('quiz-counter').innerText = `Fanontaniana ${APP_STATE.currentQuizIndex + 1} / ${quizList.length}`;
+            document.getElementById('quiz-current-score').innerText = APP_STATE.quizScore;
+            document.getElementById('quiz-question-text').innerText = q.question;
+
+            const progressBar = document.getElementById('quiz-progress-bar');
+            if (progressBar) {
+                const pct = ((APP_STATE.currentQuizIndex + 1) / quizList.length) * 100;
+                progressBar.style.width = `${pct}%`;
+            }
+
+            const optionsBox = document.getElementById('quiz-options-container');
+            optionsBox.innerHTML = q.options.map((opt, idx) => `
+                <button onclick="selectQuizOption(${idx})" class="quiz-opt-btn w-full text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 font-medium text-xs sm:text-sm text-slate-800 transition flex items-center justify-between">
+                    <span>${opt}</span>
+                    <i class="fa-regular fa-circle text-slate-300"></i>
+                </button>
+            `).join('');
+
+            renderKaTeX();
+        }
+
+        function selectQuizOption(selectedIndex) {
+            const quizList = getFilteredQuizList();
+            const q = quizList[APP_STATE.currentQuizIndex];
+            const buttons = document.querySelectorAll('.quiz-opt-btn');
+            
+            buttons.forEach(btn => btn.disabled = true);
+
+            const feedbackTitle = document.getElementById('quiz-feedback-title');
+            const explanationText = document.getElementById('quiz-explanation-text');
+            const explanationBox = document.getElementById('quiz-explanation-box');
+            const nextBtn = document.getElementById('quiz-next-btn');
+
+            if (selectedIndex === q.correct) {
+                buttons[selectedIndex].className = "w-full text-left p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold text-xs sm:text-sm transition flex items-center justify-between";
+                feedbackTitle.innerHTML = `<span class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Marina ny valiny! (+10 XP)</span>`;
+                APP_STATE.quizScore += 10;
+                APP_STATE.points += 10;
+                updateUserPointsDisplay();
+            } else {
+                buttons[selectedIndex].className = "w-full text-left p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 font-bold text-xs sm:text-sm transition flex items-center justify-between";
+                buttons[q.correct].className = "w-full text-left p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold text-xs sm:text-sm transition flex items-center justify-between";
+                feedbackTitle.innerHTML = `<span class="text-rose-600"><i class="fa-solid fa-circle-xmark"></i> Misy diso kely.</span>`;
+            }
+
+            explanationText.innerText = q.explanation;
+            if (explanationBox) explanationBox.classList.remove('hidden');
+
+            if (nextBtn) {
+                nextBtn.disabled = false;
+                nextBtn.className = "bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition flex items-center gap-2 cursor-pointer shadow";
+            }
+
+            renderKaTeX();
+        }
+
+        function nextQuestion() {
+            const quizList = getFilteredQuizList();
+            APP_STATE.currentQuizIndex++;
+            if (APP_STATE.currentQuizIndex >= quizList.length) {
+                APP_STATE.currentQuizIndex = 0;
+            }
+            loadQuizQuestion();
+        }
+
+        /* ================= AI CHAT ASSISTANT ================= */
+        function appendChatMessage(sender, text) {
+            const chatMessages = document.getElementById('chat-messages');
+            if (!chatMessages) return;
+
+            const isUser = sender === 'user';
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex items-start space-x-3 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
+
+            const avatar = isUser ? `
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            ` : `
+                <div class="w-8 h-8 rounded-lg bg-brand-dark text-amber-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+            `;
+
+            const bgClass = isUser ? 'bg-emerald-600 text-white rounded-tr-none' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none';
+
+            msgDiv.innerHTML = `
+                ${avatar}
+                <div class="${bgClass} rounded-2xl p-4 max-w-[85%] shadow-sm text-xs sm:text-sm space-y-2">
+                    <p class="leading-relaxed whitespace-pre-wrap">${text}</p>
+                </div>
+            `;
+
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            renderKaTeX();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            appendChatMessage('user', text);
+
+            if (!APP_STATE.groqApiKey) {
+                setTimeout(() => {
+                    appendChatMessage('ai', "⚠️ Tsy mbola voatohana ny Groq API Key! Kitiho ny bokotra ⚙️ (Paramètres) ao ambony mba hampidirana ny API Key-nao mba hahazoana valiny avy amin'ny Prof IA.");
+                }, 500);
+                return;
+            }
+
+            appendChatMessage('ai', "Mieritreritra ny AI Prof... ⏳");
+
+            try {
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${APP_STATE.groqApiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: APP_STATE.groqModel,
+                        messages: [
+                            {
+                                role: 'system',
+                                content: "Ianao dia mpampianatra virtoaly mahay tsara ny programa Terminale Série D eto Madagasikara (Maths, SVT, Physique-Chimie, Filôzôfia). Valio mazava, fohy, sy amim-pahamendrehana ny fanontanian'ny mpianatra."
+                            },
+                            { role: 'user', content: text }
+                        ],
+                        temperature: 0.6
+                    })
+                });
+
+                const data = await response.json();
+                const chatMessages = document.getElementById('chat-messages');
+                if (chatMessages && chatMessages.lastChild) {
+                    chatMessages.removeChild(chatMessages.lastChild);
+                }
+
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    appendChatMessage('ai', data.choices[0].message.content);
+                } else {
+                    appendChatMessage('ai', "Misy olana tamin'ny fangatahana any amin'ny Groq API. Hamarino ny API Key-nao.");
+                }
+            } catch (err) {
+                const chatMessages = document.getElementById('chat-messages');
+                if (chatMessages && chatMessages.lastChild) {
+                    chatMessages.removeChild(chatMessages.lastChild);
+                }
+                appendChatMessage('ai', "Misy olana amin'ny koneksionina na API Key: " + err.message);
+            }
+        }
+
+        function sendQuickMessage(msg) {
+            const input = document.getElementById('chat-input');
+            if (input) input.value = msg;
+            sendMessage();
+        }
+
+        function clearChat() {
+            const chatMessages = document.getElementById('chat-messages');
+            if (chatMessages) {
+                chatMessages.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-dark text-amber-400 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 max-w-[85%] shadow-sm text-xs sm:text-sm space-y-2 text-slate-800">
+                            <p class="font-bold text-brand-700">Salama! Izaho no AI Prof Bac D Madagascar 🇲🇬</p>
+                            <p>Manana fanontaniana amin'ny <strong>SVT, Maths, Physique-Chimie, na Filôzôfia</strong> ve ianao? Mampiasà ny API Key mba hamaliana mivantana amim-pahamendrehana!</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        /* ================= SETTINGS MODAL FUNCTIONS ================= */
+        function openSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            const input = document.getElementById('modal-api-key-input');
+            const select = document.getElementById('modal-model-select');
+            
+            if (input) input.value = APP_STATE.groqApiKey;
+            if (select) select.value = APP_STATE.groqModel;
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function saveSettingsModal() {
+            const input = document.getElementById('modal-api-key-input');
+            const select = document.getElementById('modal-model-select');
+            
+            if (input) {
+                APP_STATE.groqApiKey = input.value.trim();
+                localStorage.setItem('mpanampy_groq_key', APP_STATE.groqApiKey);
+            }
+            if (select) {
+                APP_STATE.groqModel = select.value;
+                localStorage.setItem('mpanampy_groq_model', APP_STATE.groqModel);
+            }
+            
+            checkApiKeyStatus();
+            closeSettingsModal();
+        }
+
+        function checkApiKeyStatus() {
+            const dot = document.getElementById('api-status-dot');
+            if (dot) {
+                dot.className = APP_STATE.groqApiKey ? 'absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500' : 'absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-amber-500';
+            }
+        }
+
+        function askAIPromptFromQuiz() {
+            switchTab('ai-tutor');
+            const currentQ = document.getElementById('quiz-question-text').innerText;
+            sendQuickMessage(`Hazavao amiko amin'ny antsipiriany ity fanontaniana Quiz Bac D ity: "${currentQ}"`);
+        }
+
+        function viewSujetMock(sujetName) {
+            switchTab('ai-tutor');
+            sendQuickMessage(`Omeo corrigé type sy fanazavana amin'ny sujet BACC D ${sujetName}.`);
+        }
+
+        /* ================= CALCULATEUR DE MOYENNE ================= */
+        function calculateBacAverage() {
+            const grades = {
+                svt: parseFloat(document.getElementById('grade-svt').value) || 0,
+                math: parseFloat(document.getElementById('grade-math').value) || 0,
+                pc: parseFloat(document.getElementById('grade-pc').value) || 0,
+                philo: parseFloat(document.getElementById('grade-philo').value) || 0,
+                fr: parseFloat(document.getElementById('grade-fr').value) || 0,
+                mlg: parseFloat(document.getElementById('grade-mlg').value) || 0,
+                ang: parseFloat(document.getElementById('grade-ang').value) || 0,
+                eps: parseFloat(document.getElementById('grade-eps').value) || 0
+            };
+
+            const coefs = { svt: 5, math: 5, pc: 5, philo: 2, fr: 2, mlg: 2, ang: 2, eps: 1 };
+            let totalPoints = 0;
+            let totalCoefs = 0;
+
+            for (let key in grades) {
+                totalPoints += grades[key] * coefs[key];
+                totalCoefs += coefs[key];
+            }
+
+            const average = totalPoints / totalCoefs;
+            document.getElementById('bac-moyenne-display').innerText = `${average.toFixed(2)} / 20`;
+            document.getElementById('bac-total-points').innerText = totalPoints.toFixed(1);
+
+            const mentionEl = document.getElementById('bac-mention-display');
+            if (average >= 16) {
+                mentionEl.className = 'bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs px-3 py-1 rounded-full font-bold';
+                mentionEl.innerText = 'ADMIS - Mention TRÈS BIEN';
+            } else if (average >= 14) {
+                mentionEl.className = 'bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs px-3 py-1 rounded-full font-bold';
+                mentionEl.innerText = 'ADMIS - Mention BIEN';
+            } else if (average >= 12) {
+                mentionEl.className = 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs px-3 py-1 rounded-full font-bold';
+                mentionEl.innerText = 'ADMIS - Mention ASSEZ BIEN';
+            } else if (average >= 10) {
+                mentionEl.className = 'bg-slate-700 border border-slate-600 text-slate-200 text-xs px-3 py-1 rounded-full font-bold';
+                mentionEl.innerText = 'ADMIS - Mention PASSABLE';
+            } else {
+                mentionEl.className = 'bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs px-3 py-1 rounded-full font-bold';
+                mentionEl.innerText = 'AJOURNÉ (Tsy afaka)';
+            }
+        }
+
+        function resetGradeCalculator() {
+            document.getElementById('grade-svt').value = 10;
+            document.getElementById('grade-math').value = 10;
+            document.getElementById('grade-pc').value = 10;
+            document.getElementById('grade-philo').value = 10;
+            document.getElementById('grade-fr').value = 10;
+            document.getElementById('grade-mlg').value = 10;
+            document.getElementById('grade-ang').value = 10;
+            document.getElementById('grade-eps').value = 10;
+            calculateBacAverage();
+        }
+
+        /* ================= POMODORO TIMER ================= */
+        function togglePomodoro() {
+            const btn = document.getElementById('pomodoro-start-btn');
+            if (APP_STATE.pomodoroRunning) {
+                clearInterval(APP_STATE.pomodoroInterval);
+                APP_STATE.pomodoroRunning = false;
+                btn.innerHTML = `<i class="fa-solid fa-play"></i> Hanomboka`;
+            } else {
+                APP_STATE.pomodoroRunning = true;
+                btn.innerHTML = `<i class="fa-solid fa-pause"></i> Tohanana`;
+                APP_STATE.pomodoroInterval = setInterval(() => {
+                    if (APP_STATE.pomodoroTime > 0) {
+                        APP_STATE.pomodoroTime--;
+                        updatePomodoroDisplay();
+                    } else {
+                        clearInterval(APP_STATE.pomodoroInterval);
+                        alert('🔔 Tapitra ny 25 minitra! Mampanaftra saina pandritra ny 5 minitra.');
+                        resetPomodoro();
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetPomodoro() {
+            clearInterval(APP_STATE.pomodoroInterval);
+            APP_STATE.pomodoroRunning = false;
+            APP_STATE.pomodoroTime = 25 * 60;
+            updatePomodoroDisplay();
+            document.getElementById('pomodoro-start-btn').innerHTML = `<i class="fa-solid fa-play"></i> Hanomboka`;
+        }
+
+        function updatePomodoroDisplay() {
+            const m = Math.floor(APP_STATE.pomodoroTime / 60);
+            const s = APP_STATE.pomodoroTime % 60;
+            document.getElementById('pomodoro-timer-display').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        /* ================= TEXT TO SPEECH (AUDIO) ================= */
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'fr-FR';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Tsy zaka amin\'ity navigateur ity ny Synthèse vocale.');
+            }
+        }
+
+        /* ================= SECOND DEGREE CALCULATOR ================= */
+        function solveQuadraticEquation() {
+            const a = parseFloat(document.getElementById('eq-a').value);
+            const b = parseFloat(document.getElementById('eq-b').value);
+            const c = parseFloat(document.getElementById('eq-c').value);
+            const box = document.getElementById('equation-result-box');
+            box.classList.remove('hidden');
+
+            if (a === 0) {
+                box.innerHTML = `Tsy équation du second degré (a = 0).`;
+                return;
+            }
+
+            const delta = b*b - 4*a*c;
+            if (delta > 0) {
+                const x1 = (-b - Math.sqrt(delta)) / (2*a);
+                const x2 = (-b + Math.sqrt(delta)) / (2*a);
+                box.innerHTML = `<strong>Δ = ${delta} > 0</strong><br>S = { x1 = ${x1.toFixed(2)} ; x2 = ${x2.toFixed(2)} }`;
+            } else if (delta === 0) {
+                const x0 = -b / (2*a);
+                box.innerHTML = `<strong>Δ = 0</strong><br>S = { x0 = ${x0.toFixed(2)} }`;
+            } else {
+                box.innerHTML = `<strong>Δ = ${delta} < 0</strong><br>Tsy manana valiny réel amin'ny ℝ (Valiny complexes amin'ny ℂ).`;
+            }
+        }
+
+        /* ================= AUTOMATIC ONLINE BACC SUJETS SYNC ================= */
+        function renderSujetsList() {
+            const container = document.getElementById('sujets-grid-container');
+            if (!container) return;
+
+            if (!APP_STATE.sujetsList || APP_STATE.sujetsList.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-500 text-center py-6">Tsy misy sujet aloha hatreto.</p>`;
+                return;
+            }
+
+            container.innerHTML = APP_STATE.sujetsList.map(sujet => `
+                <div class="p-4 border border-slate-200 rounded-xl hover:border-brand-500 transition flex items-center justify-between bg-slate-50/50">
+                    <div class="space-y-1">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${sujet.badgeClass}">${sujet.subject} ${sujet.year}</span>
+                        <h4 class="font-bold text-slate-800 text-xs sm:text-sm">${sujet.title}</h4>
+                        <p class="text-[11px] text-slate-500">${sujet.desc}</p>
+                    </div>
+                    <button onclick="viewSujetMock('${sujet.subject} ${sujet.year} Madagascar')" class="bg-white border border-slate-200 text-slate-700 hover:bg-brand-600 hover:text-white hover:border-brand-600 font-semibold p-2 rounded-lg text-xs transition">
+                        <i class="fa-solid fa-eye"></i> Jerena
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function syncSujetsAutomatic() {
+            const statusEl = document.getElementById('sujets-sync-status');
+            const statusText = document.getElementById('sujets-status-text');
+
+            if (!navigator.onLine) {
+                if (statusEl) statusEl.className = 'flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border bg-slate-100 border-slate-300 font-semibold text-slate-600';
+                if (statusText) statusText.innerHTML = '<i class="fa-solid fa-wifi-slash text-slate-400"></i> Hors ligne (Données locales)';
+                renderSujetsList();
+                return;
+            }
+
+            if (statusEl) statusEl.className = 'flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border bg-amber-50 border-amber-200 font-semibold text-amber-700';
+            if (statusText) statusText.innerHTML = '<i class="fa-solid fa-arrows-rotate animate-spin text-amber-500"></i> Manavao amin\'ny internet...';
+
+            try {
+                const remoteUrl = 'https://raw.githubusercontent.com/bac-madagascar/sujets-db/main/sujets.json';
+                const response = await fetch(remoteUrl, { cache: 'no-cache' });
+                
+                if (response.ok) {
+                    const fetchedData = await response.json();
+                    if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+                        APP_STATE.sujetsList = fetchedData;
+                        localStorage.setItem('mpanampy_sujets_cache', JSON.stringify(fetchedData));
+                    }
+                    if (statusEl) statusEl.className = 'flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border bg-emerald-50 border-emerald-200 font-semibold text-emerald-700';
+                    if (statusText) statusText.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i> À jour (Connecté)';
+                } else {
+                    throw new Error('Server returned non-200 status');
+                }
+            } catch (error) {
+                console.log('Mampiasa ny tahiry local vokatry ny tsy fisian\'ny internet na serveur external:', error);
+                if (statusEl) statusEl.className = 'flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border bg-emerald-50 border-emerald-200 font-semibold text-emerald-700';
+                if (statusText) statusText.innerHTML = '<i class="fa-solid fa-check text-emerald-500"></i> À jour (Cache local)';
+            }
+
+            renderSujetsList();
+        }
+
+        /* ================= CORE INITIALIZATION ================= */
+        window.onload = function() {
+            renderFiches();
+            loadQuizQuestion();
+            calculateBacAverage();
+            checkApiKeyStatus();
+            renderKaTeX();
+            updateUserPointsDisplay();
+            syncSujetsAutomatic();
+
+            window.addEventListener('online', syncSujetsAutomatic);
+            window.addEventListener('offline', syncSujetsAutomatic);
+        };
+    </script>
+</body>
+</html>
